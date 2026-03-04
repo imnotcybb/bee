@@ -84,7 +84,7 @@ curl -X PUT http://localhost:8080/students/1 \
   -H "Content-Type: application/json" \
   -d '{
     "studentNumber": "2024001",
-    "name": "张三_更新",
+    "name": "张三MM",
     "email": "zhangsan_updated@example.com",
     "age": 21,
     "major": "计算机科学与技术",
@@ -97,6 +97,28 @@ curl -X PUT http://localhost:8080/students/1 \
 
 ```bash
 curl -X DELETE http://localhost:8080/students/1
+```
+
+## Query 参数示例（RequestParam）
+
+下面是与 `@RequestParam` 对应的请求示例：
+
+1) 按专业查询（query 参数）
+
+```bash
+curl -sS 'http://localhost:8080/students?major=计算机科学与技术'
+```
+
+2) 按年级查询（query 参数）
+
+```bash
+curl -sS 'http://localhost:8080/students?grade=大二'
+```
+
+3) 按学号查询（使用子路径 + query 参数）
+
+```bash
+curl -sS 'http://localhost:8080/students/by-student-number?studentNumber=20210001'
 ```
 
 ## 数据库结构

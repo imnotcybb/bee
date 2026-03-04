@@ -37,6 +37,26 @@ public class StudentController {
         return studentMapper.findByGrade(grade);
     }
 
+    // Examples using query parameters instead of path variables
+    // GET /students?major=Computer%20Science
+    @GetMapping(params = "major")
+    public List<Student> getByMajorParam(@RequestParam String major) {
+        return studentMapper.findByMajor(major);
+    }
+
+    // GET /students?grade=2024
+    @GetMapping(params = "grade")
+    public List<Student> getByGradeParam(@RequestParam String grade) {
+        return studentMapper.findByGrade(grade);
+    }
+
+    // GET /students/by-student-number?studentNumber=20210001
+    @GetMapping(value = "/by-student-number", params = "studentNumber")
+    public Student getByStudentNumberParam(@RequestParam String studentNumber) {
+        return studentMapper.findByStudentNumber(studentNumber);
+    }
+    
+
     @PostMapping
     public int create(@RequestBody Student student) {
         return studentMapper.insert(student);

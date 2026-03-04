@@ -6,10 +6,10 @@ spring:
     password:
   sql:
     init:
-      platform: sqlite
-      mode: embedded
+      mode: always
       schema-locations: classpath:schema.sql
       encoding: utf-8
+
 mybatis:
   type-aliases-package: com.cybb.bee.model
   configuration:
