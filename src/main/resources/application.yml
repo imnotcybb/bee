@@ -1,14 +1,21 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:file:./data/studentdb
     driver-class-name: org.h2.Driver
     username: sa
     password:
   h2:
     console:
       enabled: true
+  sql:
+    init:
+      platform: h2
+      mode: always
+      schema-locations: classpath:schema.sql
+      encoding: utf-8
 mybatis:
   type-aliases-package: com.cybb.bee.model
-  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
 server:
   port: 8080

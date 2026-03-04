@@ -37,3 +37,9 @@ logs/
 ### Mac OS ###
 .DS_Store
 .idea
+
+### Database Files ###
+data/
+*.db
+*.mv.db
+*.trace.db
