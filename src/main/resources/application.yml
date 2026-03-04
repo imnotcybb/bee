@@ -1,16 +1,13 @@
 spring:
   datasource:
-    url: jdbc:h2:file:./data/studentdb
-    driver-class-name: org.h2.Driver
-    username: sa
+    url: jdbc:sqlite:./data/students.db
+    driver-class-name: org.sqlite.JDBC
+    username: 
     password:
-  h2:
-    console:
-      enabled: true
   sql:
     init:
-      platform: h2
-      mode: always
+      platform: sqlite
+      mode: embedded
       schema-locations: classpath:schema.sql
       encoding: utf-8
 mybatis:
