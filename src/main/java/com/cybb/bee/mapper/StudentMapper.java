@@ -30,4 +30,7 @@ public interface StudentMapper {
 
     @Select("SELECT * FROM STUDENTS WHERE grade = #{grade}")
     List<Student> findByGrade(String grade);
+
+    @Select("select * from students where age > #{age} and major = #{major}")
+    List<Student> findAgeMajor(String major, Long age);
 }
