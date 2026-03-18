@@ -1,14 +1,15 @@
 package com.cybb.bee.model;
+
 import java.util.Date;
 
-public class Student {
+public class Course {
 
     private Long id;
     private String name;
-    private Integer age;
+    private String teacher;
     private Date createTime;
 
-    public Student() {
+    public Course() {
     }
 
     public Long getId() {
@@ -27,12 +28,12 @@ public class Student {
         this.name = name;
     }
 
-    public Integer getAge() {
-        return age;
+    public String getTeacher() {
+        return teacher;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setTeacher(String teacher) {
+        this.teacher = teacher;
     }
 
     public Date getCreateTime() {
