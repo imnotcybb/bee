@@ -16,7 +16,7 @@ public interface StudentCourseMapper {
     int find2(@Param("studentId") long studentId,@Param("courseId") long courseId);
 
     //学生选课
-    @Insert("INSERT INTO STUDENTCOURSE (studentid,courseid)VALUES (#{studentId},#{courseId}) " )
+    @Insert("INSERT INTO StudentCourse (studentid,courseid) VALUES (#{studentId}, #{courseId})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(StudentCourse studentCourse);
 
@@ -24,3 +24,4 @@ public interface StudentCourseMapper {
     @Delete("DELETE FROM StudentCourse WHERE studentId = #{studentId} and courseId = #{courseId}")
     int delete(long studentId,long courseId);
 }
+
