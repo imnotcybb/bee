@@ -23,33 +23,72 @@
       margin: 0;
       padding: 1.25rem;
       line-height: 1.5;
-      max-width: 56rem;
-      margin-inline: auto;
     }
-    h1 { font-size: 1.25rem; font-weight: 600; margin: 0 0 1rem; }
-    h2 {
+    header { margin-bottom: 1.25rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
+    h1 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.35rem; }
+    header p { margin: 0; font-size: 0.85rem; color: var(--muted); }
+    code { color: var(--accent); font-size: 0.9em; }
+
+    .layout {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .requests-column {
+      flex: 1;
+      min-width: 0;
+    }
+    .response-side {
+      width: min(380px, 38vw);
+      flex-shrink: 0;
+      position: sticky;
+      top: 1rem;
+      align-self: flex-start;
+    }
+    @media (max-width: 960px) {
+      .layout { flex-direction: column; }
+      .response-side {
+        position: relative;
+        top: 0;
+        width: 100%;
+      }
+    }
+
+    .group {
+      margin-bottom: 2rem;
+    }
+    .group:last-child {
+      margin-bottom: 0;
+    }
+    .group h2 {
       font-size: 0.85rem;
       font-weight: 600;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      margin: 1.5rem 0 0.75rem;
+      margin: 0 0 0.85rem;
       padding-bottom: 0.35rem;
       border-bottom: 1px solid var(--border);
     }
-    section {
+
+    .request-card {
       background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem 1rem 0.75rem;
-      margin-bottom: 1rem;
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1.15rem;
     }
+    .request-card:last-child {
+      margin-bottom: 0;
+    }
+
     .row {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem 0.75rem;
       align-items: flex-end;
-      margin-bottom: 0.75rem;
     }
     label {
       display: flex;
@@ -71,7 +110,7 @@
     }
     textarea {
       width: 100%;
-      min-height: 4.5rem;
+      min-height: 4rem;
       font-family: ui-monospace, "SF Mono", Menlo, monospace;
       font-size: 0.8rem;
     }
@@ -91,141 +130,193 @@
       color: var(--accent);
       border: 1px solid var(--accent);
     }
-    .out {
-      margin-top: 0.5rem;
-      padding: 0.6rem 0.75rem;
-      border-radius: 6px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      font-family: ui-monospace, Menlo, monospace;
-      font-size: 0.75rem;
-      white-space: pre-wrap;
-      word-break: break-all;
-      min-height: 2.5rem;
-      color: var(--muted);
-    }
-    .out.ok { border-color: var(--ok); color: #aff5b6; }
-    .out.err { border-color: var(--err); color: #ffb4b0; }
     .hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.35rem; }
     .desc {
       font-size: 0.8rem;
       color: var(--text);
-      margin: 0 0 0.45rem 0;
+      margin: 0 0 0.5rem 0;
       line-height: 1.45;
     }
-    .desc + .row { margin-top: 0; }
-    .block { margin-bottom: 0.9rem; }
-    .block:last-child { margin-bottom: 0; }
-    header { margin-bottom: 1rem; }
-    header p { margin: 0.35rem 0 0; font-size: 0.85rem; color: var(--muted); }
-    code { color: var(--accent); font-size: 0.9em; }
+
+    .response-panel-inner {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 2.5rem);
+    }
+    .response-side h3 {
+      margin: 0 0 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .response-meta {
+      font-size: 0.7rem;
+      color: var(--accent);
+      font-family: ui-monospace, Menlo, monospace;
+      word-break: break-all;
+      margin: 0 0 0.5rem;
+      line-height: 1.4;
+    }
+    .out {
+      flex: 1;
+      min-height: 12rem;
+      overflow: auto;
+      padding: 0.65rem 0.75rem;
+      border-radius: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 0.72rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: var(--muted);
+    }
+    .out.ok { border-color: var(--ok); color: #aff5b6; }
+    .out.err { border-color: var(--err); color: #ffb4b0; }
   </style>
 </head>
 <body>
   <header>
     <h1>Bee API 调试页</h1>
-    <p>固定请求 <code>http://localhost:8080</code>，请先启动应用。</p>
+    <p>固定请求 <code>http://localhost:8080</code>，请先启动应用。所有响应在右侧统一显示。</p>
   </header>
 
-  <h2>学生 /student</h2>
-  <section>
-    <div class="block">
-      <p class="desc"><strong>查询学生</strong>：按学生 id 查询一条记录，返回 JSON。</p>
-      <div class="row">
-        <label>id <input type="number" id="st-query-id" value="1" /></label>
-        <button type="button" id="st-query">GET /student/query</button>
-      </div>
-    </div>
-    <div class="block">
-      <p class="desc"><strong>删除学生</strong>：从数据库永久删除该 id 对应的学生（不可恢复，请谨慎）。</p>
-      <div class="row">
-        <label>id <input type="number" id="st-del-id" value="1" /></label>
-        <button type="button" id="st-del" class="secondary">GET /student/delete</button>
-      </div>
-    </div>
-    <div class="block">
-      <p class="desc"><strong>学生列表</strong>：返回当前库中全部学生；下方 id 为接口占位参数，服务端未使用。</p>
-      <div class="row">
-        <label>id（占位参数）<input type="number" id="st-list-id" value="1" /></label>
-        <button type="button" id="st-list">GET /student/list1</button>
-      </div>
-    </div>
-    <div class="block">
-      <p class="desc"><strong>新增学生</strong>：提交 JSON 创建学生，一般只需 <code>name</code>、<code>age</code>。</p>
-      <p class="hint">POST /student/add（JSON）</p>
-      <textarea id="st-add-json" spellcheck="false">{"name":"调试用户","age":20}</textarea>
-      <div class="row" style="margin-top:0.5rem">
-        <button type="button" id="st-add">POST /student/add</button>
-      </div>
-    </div>
-    <div class="block">
-      <p class="desc"><strong>更新学生</strong>：按 JSON 中的 <code>id</code> 修改姓名、年龄等（使用 GET + body，部分浏览器可能不支持）。</p>
-      <p class="hint">GET /student/update（JSON 请求体，部分环境对 GET+body 支持有限）</p>
-      <textarea id="st-up-json" spellcheck="false">{"id":1,"name":"Alice","age":21}</textarea>
-      <div class="row" style="margin-top:0.5rem">
-        <button type="button" id="st-up" class="secondary">GET /student/update</button>
-      </div>
-    </div>
-    <div class="out" id="st-out">响应将显示在这里</div>
-  </section>
+  <div class="layout">
+    <div class="requests-column">
+      <div class="group">
+        <h2>学生 /student</h2>
 
-  <h2>课程 /course</h2>
-  <section>
-    <div class="block">
-      <p class="desc"><strong>新增课程</strong>：提交 JSON 创建一门课，填写课程名、授课教师等。</p>
-      <p class="hint">POST /course/add</p>
-      <textarea id="co-add-json" spellcheck="false">{"name":"新课","teacher":"某老师"}</textarea>
-      <div class="row" style="margin-top:0.5rem">
-        <button type="button" id="co-add">POST /course/add</button>
-      </div>
-    </div>
-    <div class="block">
-      <p class="desc"><strong>更新课程</strong>：按 JSON 中的 <code>id</code> 修改课程名称与教师。</p>
-      <p class="hint">POST /course/update</p>
-      <textarea id="co-up-json" spellcheck="false">{"id":1,"name":"Java基础","teacher":"张老师"}</textarea>
-      <div class="row" style="margin-top:0.5rem">
-        <button type="button" id="co-up">POST /course/update</button>
-      </div>
-    </div>
-    <div class="block">
-      <p class="desc"><strong>查询 / 删除课程</strong>：左侧填写课程 id；「查询」返回该课详情，「删除」从库中移除该课程（若仍有人选课，请视业务与数据库约束而定）。</p>
-      <div class="row">
-        <label>id <input type="number" id="co-q-id" value="1" /></label>
-        <button type="button" id="co-q" class="secondary">GET /course/query</button>
-        <button type="button" id="co-del" class="secondary">GET /course/delete</button>
-      </div>
-    </div>
-    <div class="out" id="co-out">响应将显示在这里</div>
-  </section>
+        <section class="request-card">
+          <p class="desc"><strong>查询学生</strong>：按学生 id 查询一条记录，返回 JSON。</p>
+          <div class="row">
+            <label>id <input type="number" id="st-query-id" value="1" /></label>
+            <button type="button" data-req="st-query">GET /student/query</button>
+          </div>
+        </section>
 
-  <h2>选课 / 退课（/studentCourse）</h2>
-  <section>
-    <p class="desc">
-      <strong>选课</strong>：指定学生与课程，在选课表中新增一条关联（重复选课会失败）。<strong>退课</strong>：取消该学生与该课程的关联。
-    </p>
-    <p class="hint">
-      选课：<code>GET /studentCourse/addStudentCourse?studentId=&amp;courseId=</code><br />
-      退课：<code>GET /studentCourse/drop?studentId=&amp;courseId=</code>（与
-      <code>deleteStudentCourse</code> 相同）
-    </p>
-    <div class="row">
-      <label>studentId <input type="number" id="sc-sid" value="1" /></label>
-      <label>courseId <input type="number" id="sc-cid" value="1" /></label>
-      <button type="button" id="sc-add">选课</button>
-      <button type="button" id="sc-del" class="secondary">退课</button>
+        <section class="request-card">
+          <p class="desc"><strong>删除学生</strong>：从数据库永久删除该 id 对应的学生（不可恢复，请谨慎）。</p>
+          <div class="row">
+            <label>id <input type="number" id="st-del-id" value="1" /></label>
+            <button type="button" class="secondary" data-req="st-del">GET /student/delete</button>
+          </div>
+        </section>
+
+        <section class="request-card">
+          <p class="desc"><strong>学生列表</strong>：返回当前库中全部学生；下方 id 为接口占位参数，服务端未使用。</p>
+          <div class="row">
+            <label>id（占位）<input type="number" id="st-list-id" value="1" /></label>
+            <button type="button" data-req="st-list">GET /student/list1</button>
+          </div>
+        </section>
+
+        <section class="request-card">
+          <p class="desc"><strong>新增学生</strong>：提交 JSON 创建学生，一般只需 <code>name</code>、<code>age</code>。</p>
+          <p class="hint">POST /student/add（JSON）</p>
+          <textarea id="st-add-json" spellcheck="false">{"name":"调试用户","age":20}</textarea>
+          <div class="row" style="margin-top:0.5rem">
+            <button type="button" data-req="st-add">POST /student/add</button>
+          </div>
+        </section>
+
+        <section class="request-card">
+          <p class="desc"><strong>更新学生</strong>：按 JSON 中的 <code>id</code> 修改姓名、年龄等（GET + body，部分浏览器可能不支持）。</p>
+          <p class="hint">GET /student/update</p>
+          <textarea id="st-up-json" spellcheck="false">{"id":1,"name":"Alice","age":21}</textarea>
+          <div class="row" style="margin-top:0.5rem">
+            <button type="button" class="secondary" data-req="st-up">GET /student/update</button>
+          </div>
+        </section>
+      </div>
+
+      <div class="group">
+        <h2>课程 /course</h2>
+
+        <section class="request-card">
+          <p class="desc"><strong>新增课程</strong>：提交 JSON 创建一门课。</p>
+          <p class="hint">POST /course/add</p>
+          <textarea id="co-add-json" spellcheck="false">{"name":"新课","teacher":"某老师"}</textarea>
+          <div class="row" style="margin-top:0.5rem">
+            <button type="button" data-req="co-add">POST /course/add</button>
+          </div>
+        </section>
+
+        <section class="request-card">
+          <p class="desc"><strong>更新课程</strong>：按 JSON 中的 <code>id</code> 修改课程名称与教师。</p>
+          <p class="hint">POST /course/update</p>
+          <textarea id="co-up-json" spellcheck="false">{"id":1,"name":"Java基础","teacher":"张老师"}</textarea>
+          <div class="row" style="margin-top:0.5rem">
+            <button type="button" data-req="co-up">POST /course/update</button>
+          </div>
+        </section>
+
+        <section class="request-card">
+          <p class="desc"><strong>查询课程</strong>：按课程 id 返回详情。</p>
+          <div class="row">
+            <label>id <input type="number" id="co-q-id" value="1" /></label>
+            <button type="button" class="secondary" data-req="co-q">GET /course/query</button>
+          </div>
+        </section>
+
+        <section class="request-card">
+          <p class="desc"><strong>删除课程</strong>：从库中移除该课程（若仍有人选课，视约束可能失败）。</p>
+          <div class="row">
+            <label>id <input type="number" id="co-del-id" value="1" /></label>
+            <button type="button" class="secondary" data-req="co-del">GET /course/delete</button>
+          </div>
+        </section>
+      </div>
+
+      <div class="group">
+        <h2>选课 / 退课 /studentCourse</h2>
+
+        <section class="request-card">
+          <p class="desc"><strong>选课</strong>：为学生增加一门课的关联（重复选课会失败）。</p>
+          <p class="hint"><code>GET /studentCourse/addStudentCourse</code></p>
+          <div class="row">
+            <label>studentId <input type="number" id="sc-sid" value="1" /></label>
+            <label>courseId <input type="number" id="sc-cid" value="1" /></label>
+            <button type="button" data-req="sc-add">选课</button>
+          </div>
+        </section>
+
+        <section class="request-card">
+          <p class="desc"><strong>退课</strong>：取消该学生与该课程的关联。</p>
+          <p class="hint"><code>GET /studentCourse/drop</code>（同 <code>deleteStudentCourse</code>）</p>
+          <div class="row">
+            <label>studentId <input type="number" id="sc-sid-drop" value="1" /></label>
+            <label>courseId <input type="number" id="sc-cid-drop" value="1" /></label>
+            <button type="button" class="secondary" data-req="sc-del">退课</button>
+          </div>
+        </section>
+      </div>
     </div>
-    <div class="out" id="sc-out">响应将显示在这里</div>
-  </section>
+
+    <aside class="response-side">
+      <div class="response-panel-inner">
+        <h3>响应（统一）</h3>
+        <p class="response-meta" id="response-meta">尚未发起请求</p>
+        <div class="out" id="global-out">点击左侧任意按钮后，状态码与正文会显示在此处。</div>
+      </div>
+    </aside>
+  </div>
 
   <script>
     const BASE = "http://localhost:8080";
+    const metaEl = document.getElementById("response-meta");
+    const outEl = document.getElementById("global-out");
 
-    function show(el, text, ok) {
-      el.textContent = text;
-      el.className = "out " + (ok === true ? "ok" : ok === false ? "err" : "");
+    function show(text, ok) {
+      outEl.textContent = text;
+      outEl.className = "out " + (ok === true ? "ok" : ok === false ? "err" : "");
     }
 
-    async function req(el, method, url, opts) {
+    async function req(method, url, opts, metaLine) {
+      metaEl.textContent = metaLine || method + " " + url;
       try {
         const r = await fetch(url, Object.assign({ method }, opts));
         const ct = r.headers.get("content-type") || "";
@@ -235,85 +326,92 @@
         } else {
           body = await r.text();
         }
-        const line = r.status + " " + r.statusText + "\n\n" + (body || "(empty)");
-        show(el, line, r.ok);
+        const line = method + " " + url + "\n\n" + r.status + " " + r.statusText + "\n\n" + (body || "(empty)");
+        show(line, r.ok);
       } catch (e) {
-        show(el, String(e), false);
+        show(method + " " + url + "\n\n" + String(e), false);
       }
     }
 
-    document.getElementById("st-query").onclick = () => {
-      const id = document.getElementById("st-query-id").value;
-      req(document.getElementById("st-out"), "GET", BASE + "/student/query?id=" + encodeURIComponent(id));
-    };
-    document.getElementById("st-del").onclick = () => {
-      const id = document.getElementById("st-del-id").value;
-      req(document.getElementById("st-out"), "GET", BASE + "/student/delete?id=" + encodeURIComponent(id));
-    };
-    document.getElementById("st-list").onclick = () => {
-      const id = document.getElementById("st-list-id").value;
-      req(document.getElementById("st-out"), "GET", BASE + "/student/list1?id=" + encodeURIComponent(id));
-    };
-    document.getElementById("st-add").onclick = () => {
-      const raw = document.getElementById("st-add-json").value;
-      req(document.getElementById("st-out"), "POST", BASE + "/student/add", {
-        headers: { "Content-Type": "application/json" },
-        body: raw,
-      });
-    };
-    document.getElementById("st-up").onclick = () => {
-      const raw = document.getElementById("st-up-json").value;
-      req(document.getElementById("st-out"), "GET", BASE + "/student/update", {
-        headers: { "Content-Type": "application/json" },
-        body: raw,
-      });
+    const handlers = {
+      "st-query": () => {
+        const id = document.getElementById("st-query-id").value;
+        req("GET", BASE + "/student/query?id=" + encodeURIComponent(id), undefined, "GET /student/query");
+      },
+      "st-del": () => {
+        const id = document.getElementById("st-del-id").value;
+        req("GET", BASE + "/student/delete?id=" + encodeURIComponent(id), undefined, "GET /student/delete");
+      },
+      "st-list": () => {
+        const id = document.getElementById("st-list-id").value;
+        req("GET", BASE + "/student/list1?id=" + encodeURIComponent(id), undefined, "GET /student/list1");
+      },
+      "st-add": () => {
+        const raw = document.getElementById("st-add-json").value;
+        req("POST", BASE + "/student/add", {
+          headers: { "Content-Type": "application/json" },
+          body: raw,
+        }, "POST /student/add");
+      },
+      "st-up": () => {
+        const raw = document.getElementById("st-up-json").value;
+        req("GET", BASE + "/student/update", {
+          headers: { "Content-Type": "application/json" },
+          body: raw,
+        }, "GET /student/update");
+      },
+      "co-add": () => {
+        const raw = document.getElementById("co-add-json").value;
+        req("POST", BASE + "/course/add", {
+          headers: { "Content-Type": "application/json" },
+          body: raw,
+        }, "POST /course/add");
+      },
+      "co-up": () => {
+        const raw = document.getElementById("co-up-json").value;
+        req("POST", BASE + "/course/update", {
+          headers: { "Content-Type": "application/json" },
+          body: raw,
+        }, "POST /course/update");
+      },
+      "co-q": () => {
+        const id = document.getElementById("co-q-id").value;
+        req("GET", BASE + "/course/query?id=" + encodeURIComponent(id), undefined, "GET /course/query");
+      },
+      "co-del": () => {
+        const id = document.getElementById("co-del-id").value;
+        req("GET", BASE + "/course/delete?id=" + encodeURIComponent(id), undefined, "GET /course/delete");
+      },
+      "sc-add": () => {
+        const s = document.getElementById("sc-sid").value;
+        const c = document.getElementById("sc-cid").value;
+        const u =
+          BASE +
+          "/studentCourse/addStudentCourse?studentId=" +
+          encodeURIComponent(s) +
+          "&courseId=" +
+          encodeURIComponent(c);
+        req("GET", u, undefined, "GET /studentCourse/addStudentCourse");
+      },
+      "sc-del": () => {
+        const s = document.getElementById("sc-sid-drop").value;
+        const c = document.getElementById("sc-cid-drop").value;
+        const u =
+          BASE +
+          "/studentCourse/drop?studentId=" +
+          encodeURIComponent(s) +
+          "&courseId=" +
+          encodeURIComponent(c);
+        req("GET", u, undefined, "GET /studentCourse/drop");
+      },
     };
 
-    document.getElementById("co-add").onclick = () => {
-      const raw = document.getElementById("co-add-json").value;
-      req(document.getElementById("co-out"), "POST", BASE + "/course/add", {
-        headers: { "Content-Type": "application/json" },
-        body: raw,
+    document.querySelectorAll("[data-req]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const k = btn.getAttribute("data-req");
+        if (handlers[k]) handlers[k]();
       });
-    };
-    document.getElementById("co-up").onclick = () => {
-      const raw = document.getElementById("co-up-json").value;
-      req(document.getElementById("co-out"), "POST", BASE + "/course/update", {
-        headers: { "Content-Type": "application/json" },
-        body: raw,
-      });
-    };
-    document.getElementById("co-q").onclick = () => {
-      const id = document.getElementById("co-q-id").value;
-      req(document.getElementById("co-out"), "GET", BASE + "/course/query?id=" + encodeURIComponent(id));
-    };
-    document.getElementById("co-del").onclick = () => {
-      const id = document.getElementById("co-q-id").value;
-      req(document.getElementById("co-out"), "GET", BASE + "/course/delete?id=" + encodeURIComponent(id));
-    };
-
-    document.getElementById("sc-add").onclick = () => {
-      const s = document.getElementById("sc-sid").value;
-      const c = document.getElementById("sc-cid").value;
-      const u =
-        BASE +
-        "/studentCourse/addStudentCourse?studentId=" +
-        encodeURIComponent(s) +
-        "&courseId=" +
-        encodeURIComponent(c);
-      req(document.getElementById("sc-out"), "GET", u);
-    };
-    document.getElementById("sc-del").onclick = () => {
-      const s = document.getElementById("sc-sid").value;
-      const c = document.getElementById("sc-cid").value;
-      const u =
-        BASE +
-        "/studentCourse/drop?studentId=" +
-        encodeURIComponent(s) +
-        "&courseId=" +
-        encodeURIComponent(c);
-      req(document.getElementById("sc-out"), "GET", u);
-    };
+    });
   </script>
 </body>
 </html>
