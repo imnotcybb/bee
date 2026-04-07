@@ -263,6 +263,13 @@
         </section>
 
         <section class="request-card">
+          <p class="desc"><strong>课程列表</strong>：返回当前库中全部课程（JSON 数组），无需参数。</p>
+          <div class="row">
+            <button type="button" data-req="co-list">GET /course/list</button>
+          </div>
+        </section>
+
+        <section class="request-card">
           <p class="desc"><strong>删除课程</strong>：从库中移除该课程（若仍有人选课，视约束可能失败）。</p>
           <div class="row">
             <label>id <input type="number" id="co-del-id" value="1" /></label>
@@ -377,6 +384,9 @@
       "co-q": () => {
         const id = document.getElementById("co-q-id").value;
         req("GET", BASE + "/course/query?id=" + encodeURIComponent(id), undefined, "GET /course/query");
+      },
+      "co-list": () => {
+        req("GET", BASE + "/course/list", undefined, "GET /course/list");
       },
       "co-del": () => {
         const id = document.getElementById("co-del-id").value;

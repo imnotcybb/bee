@@ -2,6 +2,9 @@ package com.cybb.bee.service;
 
 import com.cybb.bee.mapper.CourseMapper;
 import com.cybb.bee.model.Course;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +32,9 @@ public class CourseService {
 
     public boolean exists(Long id){
         return courseMapper.findCourse(id) != null;
+    }
+
+    public List<Course> findCourseList(){
+        return courseMapper.findCourseList();
     }
 }

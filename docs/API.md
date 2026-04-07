@@ -111,6 +111,15 @@ curl -sS "http://localhost:8080/course/delete?id=1"
 curl -sS "http://localhost:8080/course/query?id=1"
 ```
 
+### 课程列表
+
+- **方法 / 路径**：`GET /course/list`
+- **参数**：无（返回全部课程 JSON 数组）
+
+```bash
+curl -sS "http://localhost:8080/course/list"
+```
+
 ---
 
 ## 选课 `StudentCourseController`（前缀 `/studentCourse`）
@@ -141,7 +150,7 @@ curl -sS "http://localhost:8080/studentCourse/deleteStudentCourse?studentId=1&co
 
 ---
 
-## 接口一览（共 12 个路径；退课 2 选 1）
+## 接口一览（共 13 个路径；退课 2 选 1）
 
 | 说明       | 方法 | 路径 |
 |------------|------|------|
@@ -154,5 +163,6 @@ curl -sS "http://localhost:8080/studentCourse/deleteStudentCourse?studentId=1&co
 | 更新课程   | POST | `/course/update` |
 | 删除课程   | GET  | `/course/delete` |
 | 查询课程   | GET  | `/course/query` |
+| 课程列表   | GET  | `/course/list` |
 | 选课       | GET  | `/studentCourse/addStudentCourse` |
 | 退课       | GET  | `/studentCourse/drop`（或 `deleteStudentCourse`） |
