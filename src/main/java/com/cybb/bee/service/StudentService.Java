@@ -41,5 +41,5 @@ public class StudentService {
 
     public boolean exists(Long id) {
         return studentMapper.findStudent(id) != null;
-        }
     }
+}
