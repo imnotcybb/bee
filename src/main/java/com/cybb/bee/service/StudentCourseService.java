@@ -23,53 +23,49 @@ public class StudentCourseService {
 
     /**
      * 给学生退课，学生id是studentId，课程id是courseId
+     * 
      * @param studentId 学生ID
-     * @param courseId 课程ID
+     * @param courseId  课程ID
      * @return 是否退课成功
      */
     public boolean deleteCourse(long studentId, long courseId) {
         // 1.校验学生是否存在
-        if (studentService.exists(studentId)) {
-            // 2.检查课程是否存在
-            if(courseService.exists(courseId)){
-                // 3.检查是否已经选课
-                if (this.exists(studentId, courseId)) {
-                    // 4.退课
-                    studentCourseMapper.delete(studentId, courseId);
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    //学生选课
-    public boolean selectCourse(long studentId, long courseId) {
-        //1.校验学生是否存在
-        if (studentService.exists(studentId)) {
-            //2.校验课程是否存在
-            if (courseService.exists(courseId)) {
-                //3.校验是否已经选课
-                if (this.exists(studentId, courseId)) {
-                    return false;
-                } else {
-                    //4.选课
-                    StudentCourse studentCourse = new StudentCourse();
-                    studentCourse.setStudentId(studentId);
-                    studentCourse.setCourseId(courseId);
-                    studentCourseMapper.insert(studentCourse);
-                    return true;
-                }
-            } else {
-                return false;
-            }
-        } else {
+        if (!studentService.exists(studentId)) {
             return false;
         }
+        // 2.检查课程是否存在
+        if (!courseService.exists(courseId)) {
+            return false;
+        }
+        // 3.检查是否已经选课
+        if (!this.exists(studentId, courseId)) {
+            return false;
+        }
+        // 4.退课
+        studentCourseMapper.delete(studentId, courseId);
+        return true;
+    }
+
+    // 学生选课
+    public boolean selectCourse(long studentId, long courseId) {
+        // 1.校验学生是否存在
+        if (!studentService.exists(studentId)) {
+            return false;
+        }
+        // 2.校验课程是否存在
+        if (!courseService.exists(courseId)) {
+            return false;
+        }
+        // 3.校验是否已经选课
+        if (this.exists(studentId, courseId)) {
+            return false;
+        }
+        // 4.选课
+        StudentCourse studentCourse = new StudentCourse();
+        studentCourse.setStudentId(studentId);
+        studentCourse.setCourseId(courseId);
+        studentCourseMapper.insert(studentCourse);
+        return true;
     }
 
     private boolean exists(long studentId, long courseId) {
