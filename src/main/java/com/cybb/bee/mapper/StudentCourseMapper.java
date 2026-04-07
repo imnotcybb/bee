@@ -8,20 +8,19 @@ import java.util.List;
 @Mapper
 public interface StudentCourseMapper {
     //查询选课
-    @Select("SELECT * FROM StudentCourse where studentId = #{studentId}")
+    @Select("SELECT * FROM student_course WHERE student_id = #{studentId}")
     List<StudentCourse> findSc(long studentId);
 
     //查询学生与课
-    @Select("SELECT count(1) FROM StudentCourse where studentId = #{studentId} and courseId = #{courseId}")
-    int find2(@Param("studentId") long studentId,@Param("courseId") long courseId);
+    @Select("SELECT count(1) FROM student_course WHERE student_id = #{studentId} AND course_id = #{courseId}")
+    int find2(@Param("studentId") long studentId, @Param("courseId") long courseId);
 
     //学生选课
-    @Insert("INSERT INTO StudentCourse (studentid,courseid) VALUES (#{studentId}, #{courseId})")
+    @Insert("INSERT INTO student_course (student_id, course_id) VALUES (#{studentId}, #{courseId})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(StudentCourse studentCourse);
 
     //学生退课
-    @Delete("DELETE FROM StudentCourse WHERE studentId = #{studentId} and courseId = #{courseId}")
-    int delete(long studentId,long courseId);
+    @Delete("DELETE FROM student_course WHERE student_id = #{studentId} AND course_id = #{courseId}")
+    int delete(long studentId, long courseId);
 }
-

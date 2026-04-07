@@ -8,24 +8,24 @@ import java.util.List;
 @Mapper
 public interface StudentMapper {
     //添加一个学生
-    @Insert("INSERT INTO COURSES(id, name, age, createTime) VALUES(#{id}, #{name},  #{age}, #{createTime})")
+    @Insert("INSERT INTO student(name, age) VALUES(#{name}, #{age})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Student student);
 
     //修改一个学生
-    @Update("UPDATE STUDENTS SET name=#{name},  age=#{age},  createTime=#{createTime} WHERE id=#{id}")
+    @Update("UPDATE student SET name=#{name}, age=#{age}, create_time=#{createTime} WHERE id=#{id}")
     int update(Student student);
 
     //删除一个学生
-    @Delete("DELETE FROM STUDENTS WHERE id=#{id}")
+    @Delete("DELETE FROM student WHERE id=#{id}")
     int delete(Long id);
 
     //查询学生
-    @Select("SELECT * FROM STUDENTS WHERE id=#{id}")
+    @Select("SELECT * FROM student WHERE id=#{id}")
     Student findStudent(Long id);
 
     //查询学生列表
-    @Select("SELECT * FROM STUDENTS")
+    @Select("SELECT * FROM student")
     List<Student> findAll();
 
 }

@@ -126,8 +126,14 @@ curl -sS "http://localhost:8080/studentCourse/addStudentCourse?studentId=1&cours
 
 ### 退课
 
-- **方法 / 路径**：`GET /studentCourse/deleteStudentCourse`
+- **方法 / 路径**：`GET /studentCourse/drop`（推荐，与下面旧路径**等价**）
 - **参数**：`studentId`、`courseId`（query）
+
+```bash
+curl -sS "http://localhost:8080/studentCourse/drop?studentId=1&courseId=1"
+```
+
+兼容旧路径（逻辑相同）：
 
 ```bash
 curl -sS "http://localhost:8080/studentCourse/deleteStudentCourse?studentId=1&courseId=1"
@@ -135,7 +141,7 @@ curl -sS "http://localhost:8080/studentCourse/deleteStudentCourse?studentId=1&co
 
 ---
 
-## 接口一览（共 11 个）
+## 接口一览（共 12 个路径；退课 2 选 1）
 
 | 说明       | 方法 | 路径 |
 |------------|------|------|
@@ -149,4 +155,4 @@ curl -sS "http://localhost:8080/studentCourse/deleteStudentCourse?studentId=1&co
 | 删除课程   | GET  | `/course/delete` |
 | 查询课程   | GET  | `/course/query` |
 | 选课       | GET  | `/studentCourse/addStudentCourse` |
-| 退课       | GET  | `/studentCourse/deleteStudentCourse` |
+| 退课       | GET  | `/studentCourse/drop`（或 `deleteStudentCourse`） |

@@ -12,7 +12,8 @@ public class StudentCourseController {
     @Autowired
     private StudentCourseService studentCourseService;
 
-    @GetMapping("deleteStudentCourse")
+    /** 退课：与 {@code deleteStudentCourse} 同义，便于记忆 */
+    @GetMapping({ "deleteStudentCourse", "drop" })
     public String delete(@RequestParam("studentId") long studentId, @RequestParam("courseId") long courseId) {
         if (studentCourseService.deleteCourse(studentId, courseId)) {
             return "退课成功";
